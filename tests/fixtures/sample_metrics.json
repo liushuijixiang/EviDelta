@@ -1,0 +1,17 @@
+{
+  "api_version": "fixture-v1",
+  "data": {
+    "time_series": [
+      {
+        "month": "2026-01",
+        "active_users": 10000,
+        "growth_pct": 5
+      },
+      {
+        "month": "2026-02",
+        "active_users": 11200,
+        "growth_pct": 12
+      }
+    ]
+  }
+}

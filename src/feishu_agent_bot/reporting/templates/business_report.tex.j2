@@ -1,0 +1,78 @@
+\documentclass[11pt,a4paper,UTF8,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xurl}
+\geometry{a4paper,margin=2.2cm}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+\hypersetup{hidelinks}
+\setlength{\LTpre}{0.5em}
+\setlength{\LTpost}{0.5em}
+\title{ {{ title|latex }} }
+{% if subtitle %}\author{ {{ subtitle|latex }} }{% endif %}
+\date{ {{ generated_at|latex }} }
+\begin{document}
+\maketitle
+\tableofcontents
+\clearpage
+
+\section{报告信息}
+报告版本：{{ version|latex }}\\
+报告用途：{{ purpose|latex }}\\
+模板版本：{{ template_version|latex }}
+
+{% if executive_summary %}
+\section{执行摘要}
+{% for item in executive_summary %}
+\noindent {{ item.text|latex }}\\
+{% endfor %}
+{% endif %}
+
+{% for section in sections %}
+\section{ {{ section.title|latex }} }
+{{ section.body|latex }}{% for citation in section.citation_keys %}\cite{ {{- citation -}} }{% endfor %}
+{% for table in section.tables %}
+{{ table|render_table }}
+{% endfor %}
+{% for chart in section.charts %}
+\noindent {% if section.language == "en" %}As shown in Figure~\ref{fig:{{ chart.chart_id }}}, the chart visualizes {{ chart.title|latex }}.{% else %}如图~\ref{fig:{{ chart.chart_id }}} 所示，该图展示了{{ chart.title|latex }}。{% endif %}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{ {{ chart.path }} }
+\caption{ {{ chart.title|latex }}{% if chart.unit %}（单位：{{ chart.unit|latex }}）{% endif %} }
+\label{fig:{{ chart.chart_id }}}
+\end{figure}
+{% endfor %}
+{% endfor %}
+
+{% if data_quality %}
+\section{数据质量}
+{% for item in data_quality %}
+\noindent {{ item|mapping_text|latex }}\\
+{% endfor %}
+{% endif %}
+
+{% if limitations %}
+\section{限制与边界}
+{% for limitation in limitations %}
+\noindent -- {{ limitation|latex }}\\
+{% endfor %}
+{% endif %}
+
+{% for appendix in appendices %}
+\section{附录：{{ appendix.title|latex }} }
+{{ appendix.body|latex }}
+{% endfor %}
+
+{% if has_bibliography %}
+\clearpage
+\nocite{*}
+\bibliographystyle{unsrt}
+\bibliography{reference}
+{% endif %}
+\end{document}

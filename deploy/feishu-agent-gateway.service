@@ -1,0 +1,24 @@
+[Unit]
+Description=Feishu Agent gateway
+After=network-online.target feishu-agent-worker.service
+Wants=network-online.target feishu-agent-worker.service
+
+[Service]
+Type=simple
+User=__USER__
+Group=__GROUP__
+WorkingDirectory=__PROJECT_DIR__
+EnvironmentFile=__PROJECT_DIR__/.env
+ExecStartPre=/usr/bin/env TEMPORAL_CONNECT_TIMEOUT_SECONDS=60 __PROJECT_DIR__/scripts/wait_temporal.sh
+ExecStart=__PROJECT_DIR__/.venv/bin/python -m feishu_agent_bot.main
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=60
+KillSignal=SIGTERM
+# ExecStartPre uses snap's temporal CLI; snap-confine fails under NoNewPrivileges.
+PrivateTmp=true
+ReadWritePaths=__PROJECT_DIR__/data
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

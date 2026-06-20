@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evidelta"
+version = "0.1.0a0"
+description = "Evidence-driven continuous research and intelligence engine for Feishu/Lark"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "beautifulsoup4>=4.12,<5",
+  "charset-normalizer>=3.3,<4",
+  "ddgs>=9,<10",
+  "httpx[socks]>=0.27,<1",
+  "jinja2>=3.1,<4",
+  "lark-oapi>=1.6.8,<2",
+  "matplotlib>=3.8,<4",
+  "openpyxl>=3.1,<4",
+  "pandas>=2.0,<3",
+  "pyxlsb>=1.0,<2",
+  "PyMuPDF>=1.24,<2",
+  "python-docx>=1.1,<2",
+  "pydantic>=2.8,<3",
+  "temporalio>=1.28,<2",
+  "xlrd>=2.0,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-xdist>=3.6,<4"]
+
+[project.scripts]
+evidelta-bot = "feishu_agent_bot.main:main"
+feishu-agent-bot = "feishu_agent_bot.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "temporal_integration: tests that require a running local Temporal service",
+]

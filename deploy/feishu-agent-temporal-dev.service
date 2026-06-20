@@ -1,0 +1,22 @@
+[Unit]
+Description=Feishu Agent local Temporal dev server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__USER__
+Group=__GROUP__
+WorkingDirectory=__PROJECT_DIR__
+EnvironmentFile=__PROJECT_DIR__/.env
+ExecStart=/usr/bin/env temporal server start-dev --db-filename __PROJECT_DIR__/data/temporal.db
+Restart=on-failure
+RestartSec=5
+# The Temporal CLI is installed through snap on common Ubuntu setups. snap-confine
+# needs its normal capability set and fails when NoNewPrivileges is enabled.
+PrivateTmp=true
+ReadWritePaths=__PROJECT_DIR__/data
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
